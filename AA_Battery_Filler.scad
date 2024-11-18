@@ -6,6 +6,8 @@ AA_Dia = 14;
 AA_Button = 1.4;
 AA_ButtonDia = 4.5;
 
+wireDia = 1;
+
 module ThreeByOnePack()
 {
 	spacingX = 16;
@@ -14,10 +16,21 @@ module ThreeByOnePack()
 	separatorsZ = 18;
 	separatorGapZ = AA_Length-separatorsZ-4;
 
-	ThreeByOneArray(spacingX, spacingY);
+	difference()
+	{
+		union()
+		{
+			ThreeByOneArray(spacingX, spacingY);
 
-	y = 6;
-	tcu([0,-y/2,separatorsZ], [spacingX*2, y, separatorGapZ]);
+			// Connect the cells together:
+			y = 6;
+			tcu([0,-y/2,separatorsZ], [spacingX*2, y, separatorGapZ]);
+		}
+
+		// Add spots for the contact wires:
+		rotate([0,0,-45]) rotate([0,90,0]) tcy([0,0,-5], d=wireDia, h=20);
+		translate([0,0,AA_Length]) rotate([0,0,-45]) rotate([0,90,0]) tcy([0,0,-5], d=wireDia, h=20);
+	}
 }
 
 module ThreeByOneArray(spacingX, spacingY)
