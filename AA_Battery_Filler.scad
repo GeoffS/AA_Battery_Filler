@@ -20,8 +20,10 @@ separatorGapZ = AA_Length-separatorsZ-4;
 module basicThreeByOnePack()
 {
 	ThreeByOneArray(spacingX, spacingY);
+}
 
-	// Connect the cells together:
+module cellConnector()
+{
 	y = 6;
 	tcu([0,-y/2,separatorsZ], [spacingX*2, y, separatorGapZ]);
 }
@@ -35,13 +37,14 @@ module ThreeByOnePackBottom()
 		// Add spots for the contact wires:
 		rotate([0,0,-45]) 
 		{
-			
 			// Recess across the end for electrical contact:
 			rotate([0,90,0]) tcy([0,0,-5], d=wireDia, h=20);
 			// Hole for the wire end:
 			tcy([-5,0,-15], d=wireDia+0.5, h=20) ;
 		}
 	}
+
+	cellConnector();
 }
 
 module ThreeByOnePackTop()
@@ -59,6 +62,8 @@ module ThreeByOnePackTop()
 			tcy([-(AA_ButtonDia/2+1.5),0,-15], d=wireDia+0.5, h=20) ;
 		}
 	}
+
+	cellConnector();
 }
 
 module ThreeByOneArray(spacingX, spacingY)
