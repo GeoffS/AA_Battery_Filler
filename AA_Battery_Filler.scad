@@ -33,7 +33,14 @@ module ThreeByOnePackBottom()
 		basicThreeByOnePack();
 
 		// Add spots for the contact wires:
-		rotate([0,0,-45]) rotate([0,90,0]) tcy([0,0,-5], d=wireDia, h=20);
+		rotate([0,0,-45]) 
+		{
+			
+			// Recess across the end for electrical contact:
+			rotate([0,90,0]) tcy([0,0,-5], d=wireDia, h=20);
+			// Hole for the wire end:
+			tcy([-5,0,-15], d=wireDia+0.5, h=20) ;
+		}
 	}
 }
 
@@ -46,10 +53,10 @@ module ThreeByOnePackTop()
 		// Add spots for the contact wires:
 		translate([0,0,AA_Length]) rotate([0,0,45]) 
 		{
-			// Recess:
+			// Recess across the end for electrical contact:
 			rotate([0,90,0]) tcy([0,0,-5], d=wireDia, h=20);
 			// Hole for the wire end:
-			tcy([AA_ButtonDia/2+1.5,0,-10], d=wireDia+0.5, h=20) ;
+			tcy([-(AA_ButtonDia/2+1.5),0,-15], d=wireDia+0.5, h=20) ;
 		}
 	}
 }
