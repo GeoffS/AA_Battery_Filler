@@ -89,8 +89,12 @@ module clip(d=0)
 
 if(developmentRender)
 {
-	display() translate([2*spacingX, 0, AA_Length]) rotate([0,180,0]) ThreeByOnePackBottom();
-	display() translate([0, -spacingY, 0]) ThreeByOnePackTop();
+	// display() ThreeByOnePackBottom();
+
+	display() ThreeByOnePackTop();
+
+	// display() translate([2*spacingX, 0, AA_Length]) rotate([0,180,0]) ThreeByOnePackBottom();
+	// display() translate([0, -spacingY, 0]) ThreeByOnePackTop();
 }
 else
 {
