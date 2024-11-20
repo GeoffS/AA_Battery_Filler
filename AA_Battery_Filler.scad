@@ -1,6 +1,9 @@
 include <../OpenSCADdesigns/MakeInclude.scad>
 include <../OpenSCADdesigns/chamferedCylinders.scad>
 
+makeBottomSet = false;
+makeTopSet = false;
+
 AA_Length = 50;
 AA_Dia = 14;
 AA_Button = 1.4;
@@ -8,28 +11,46 @@ AA_ButtonDia = 4.5;
 
 wireDia = 1;
 
-module ThreeByOnePack()
+spacingX = 16;
+spacingY = 16;
+
+separatorsZ = 18;
+separatorGapZ = AA_Length-separatorsZ-4;
+
+module basicThreeByOnePack()
 {
-	spacingX = 16;
-	spacingY = 16;
+	ThreeByOneArray(spacingX, spacingY);
 
-	separatorsZ = 18;
-	separatorGapZ = AA_Length-separatorsZ-4;
+	// Connect the cells together:
+	y = 6;
+	tcu([0,-y/2,separatorsZ], [spacingX*2, y, separatorGapZ]);
+}
 
+module ThreeByOnePackBottom()
+{
 	difference()
 	{
-		union()
-		{
-			ThreeByOneArray(spacingX, spacingY);
-
-			// Connect the cells together:
-			y = 6;
-			tcu([0,-y/2,separatorsZ], [spacingX*2, y, separatorGapZ]);
-		}
+		basicThreeByOnePack();
 
 		// Add spots for the contact wires:
 		rotate([0,0,-45]) rotate([0,90,0]) tcy([0,0,-5], d=wireDia, h=20);
-		translate([0,0,AA_Length]) rotate([0,0,-45]) rotate([0,90,0]) tcy([0,0,-5], d=wireDia, h=20);
+	}
+}
+
+module ThreeByOnePackTop()
+{
+	difference()
+	{
+		basicThreeByOnePack();
+
+		// Add spots for the contact wires:
+		translate([0,0,AA_Length]) rotate([0,0,45]) 
+		{
+			// Recess:
+			rotate([0,90,0]) tcy([0,0,-5], d=wireDia, h=20);
+			// Hole for the wire end:
+			tcy([AA_ButtonDia/2+1.5,0,-10], d=wireDia+0.5, h=20) ;
+		}
 	}
 }
 
@@ -56,9 +77,11 @@ module clip(d=0)
 
 if(developmentRender)
 {
-	display() ThreeByOnePack();
+	display() translate([2*spacingX, 0, AA_Length]) rotate([0,180,0]) ThreeByOnePackBottom();
+	display() translate([0, -spacingY, 0]) ThreeByOnePackTop();
 }
 else
 {
-	ThreeByOnePack();
+	if(makeBottomSet) ThreeByOnePackBottom();
+	if(makeTopSet) ThreeByOnePackTop();
 }
