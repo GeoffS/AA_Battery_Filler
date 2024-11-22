@@ -10,22 +10,31 @@ AA_Button = 1.4;
 AA_ButtonDia = 4.5;
 
 wireDia = 1;
+wireHoleDia = wireDia + 1;
 
 spacingX = 16;
 spacingY = 16;
 
-separatorsZ = 18;
-separatorGapZ = AA_Length-separatorsZ-4;
+separatorsInDeviceZ = 18;
+connectorOffsetZ = 4;
+connectorZ = AA_Length - separatorsInDeviceZ - connectorOffsetZ;
+echo(str("connectorZ = ", connectorZ));
 
 module basicThreeByOnePack()
 {
 	ThreeByOneArray(spacingX, spacingY);
 }
 
-module cellConnector()
+cellConnectorY = 6;
+module cellConnectorTop()
 {
-	y = 6;
-	tcu([0,-y/2,separatorsZ], [spacingX*2, y, separatorGapZ]);
+	coZ = AA_Length - connectorOffsetZ - connectorZ;
+	tcu([0, -cellConnectorY/2, coZ], [spacingX*2, cellConnectorY, connectorZ]);
+}
+
+module cellConnectorBottom()
+{
+	tcu([0, -cellConnectorY/2, connectorOffsetZ], [spacingX*2, cellConnectorY, connectorZ]);
 }
 
 module ThreeByOnePackBottom()
@@ -35,16 +44,17 @@ module ThreeByOnePackBottom()
 		basicThreeByOnePack();
 
 		// Add spots for the contact wires:
+		wireHoleOffsetX = 4;
 		rotate([0,0,-45]) 
 		{
 			// Recess across the end for electrical contact:
-			rotate([0,90,0]) tcy([0,0,-5], d=wireDia, h=20);
+			rotate([0,90,0]) tcy([0,0,-wireHoleOffsetX], d=wireDia, h=20);
 			// Hole for the wire end:
-			tcy([-5,0,-15], d=wireDia+0.5, h=20) ;
+			tcy([-wireHoleOffsetX,0,-15], d=wireHoleDia, h=20) ;
 		}
 	}
 
-	cellConnector();
+	cellConnectorBottom();
 }
 
 module ThreeByOnePackTop()
@@ -59,11 +69,11 @@ module ThreeByOnePackTop()
 			// Recess across the end for electrical contact:
 			rotate([0,90,0]) tcy([0,0,-5], d=wireDia, h=20);
 			// Hole for the wire end:
-			tcy([-(AA_ButtonDia/2+1.5),0,-15], d=wireDia+0.5, h=20) ;
+			tcy([-(AA_ButtonDia/2+1.5),0,-15], d=wireHoleDia, h=20) ;
 		}
 	}
 
-	cellConnector();
+	cellConnectorTop();
 }
 
 module ThreeByOneArray(spacingX, spacingY)
@@ -91,10 +101,10 @@ if(developmentRender)
 {
 	// display() ThreeByOnePackBottom();
 
-	display() ThreeByOnePackTop();
+	// display() ThreeByOnePackTop();
 
-	// display() translate([2*spacingX, 0, AA_Length]) rotate([0,180,0]) ThreeByOnePackBottom();
-	// display() translate([0, -spacingY, 0]) ThreeByOnePackTop();
+	display() translate([2*spacingX, 0, AA_Length]) rotate([0,180,0]) ThreeByOnePackBottom();
+	display() translate([0, -spacingY, 0]) ThreeByOnePackTop();
 }
 else
 {
